@@ -1,40 +1,34 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import Layout from "./container/basic/layout";
+import './i18n/i18n';
 
-
-const LoginButton = () => {
-  const { loginWithRedirect } = useAuth0();
-  return <button onClick={() => loginWithRedirect()}>Log In</button>
-}
-
-const LogoutButton = () => {
-  const { logout } = useAuth0();
-  return <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Logout </button>
-}
 
 
 export default function App() {
-  const { user, isAuthenticated, isLoading } = useAuth0();
-
-  if (isLoading) {
-    return <div>Loading ...</div>;
+  const { t, i18n: { changeLanguage, language } } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const handleChangeLanguage = () => {
+    const newLanguage = currentLanguage === "en" ? "pt" : "en";
+    setCurrentLanguage(newLanguage);
+    changeLanguage(newLanguage);
   }
 
+
   return (
-    <div>
-      {isAuthenticated ? (
-        <div>
-          <img src={user!.picture} alt={user!.name} />
-          <h2>{user!.name}</h2>
-          <p>{user!.email}</p>
-          <LogoutButton />
-        </div>
-      ) :
-        (
-          <div>
-            isAuthenticated: {isAuthenticated}
-            <LoginButton />
-          </div>
-        )}
-    </div>
+    <Layout>
+      <h1>
+        Our Translated Header:
+        {t('headerTitle', { appName: "App for Translations" })}
+      </h1>
+      <h3>
+        Current Language: {currentLanguage}
+      </h3>     <button
+        type="button"
+        onClick={handleChangeLanguage}
+      >
+        Change Language
+      </button>
+    </Layout>
   )
 }
