@@ -1,7 +1,7 @@
-from configs.authorization_header_elements import get_bearer_token
-from configs.custom_exceptions import PermissionDeniedException
+from configs.auth.authorization_header_elements import get_bearer_token
+from configs.auth.custom_exceptions import PermissionDeniedException
 from fastapi import Depends
-from configs.json_web_token import JsonWebToken
+from configs.auth.json_web_token import JsonWebToken
 
 
 def validate_token(token: str = Depends(get_bearer_token)):

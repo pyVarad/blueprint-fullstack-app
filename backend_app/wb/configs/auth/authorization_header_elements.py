@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from configs.custom_exceptions import BadCredentialsException, RequiresAuthenticationException
+from configs.auth.custom_exceptions import BadCredentialsException, RequiresAuthenticationException
 from starlette.requests import Request as StarletteRequest
 
 

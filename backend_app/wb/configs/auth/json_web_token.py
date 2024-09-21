@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import jwt
 from configs.configurations import config
-from configs.custom_exceptions import BadCredentialsException, UnableCredentialsException
+from configs.auth.custom_exceptions import BadCredentialsException, UnableCredentialsException
 
 
 @dataclass
@@ -16,9 +16,6 @@ class JsonWebToken:
     jwks_uri: str = f"{config.AUTH0_ISSUER}.well-known/jwks.json"
 
     def validate(self):
-        print("++++++++++++++++++ ISSUER URI +++++++++++++++++++++")
-        print(config)
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++")
         try:
             jwks_client = jwt.PyJWKClient(self.jwks_uri)
             jwt_signing_key = jwks_client.get_signing_key_from_jwt(

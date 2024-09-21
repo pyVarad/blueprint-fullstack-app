@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi.responses import JSONResponse
 import uvicorn
-from configs.dependencies import validate_token
+from configs.auth.dependencies import validate_token
 from configs.configurations import config
 from configs.logger import configure_logging
 from fastapi import Depends, FastAPI
