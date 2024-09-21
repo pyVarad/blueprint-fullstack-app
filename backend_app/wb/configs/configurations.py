@@ -12,10 +12,14 @@ class BaseConfig(BaseSettings):
 class GlobalConfig(BaseConfig):
     DB_URL: Optional[str] = None
 
-
 class DevConfig(GlobalConfig):
     DB_URL: str = "sqlite://dev.db"
     DB_FORCE_ROLL_BACK: bool = False
+    AUTH0_DOMAIN_NAME: str = ""
+    AUTH0_ISSUER: str = ""
+    AUTH0_AUDIENCE: str = ""
+    AUTH0_ALGORITHMS: str = ""
+    CLIENT_ORIGIN_URL: str = ""
 
     model_config = SettingsConfigDict(env_prefix="DEV_")
 
@@ -23,6 +27,11 @@ class DevConfig(GlobalConfig):
 class TestConfig(GlobalConfig):
     DB_URL: str = "sqlite://dev.db"
     DB_FORCE_ROLL_BACK: bool = False
+    AUTH0_DOMAIN_NAME: str = ""
+    AUTH0_ISSUER: str = ""
+    AUTH0_AUDIENCE: str = ""
+    AUTH0_ALGORITHMS: str = ""
+    CLIENT_ORIGIN_URL: str = ""    
 
     model_config = SettingsConfigDict(env_prefix="TEST_")
 
@@ -30,6 +39,11 @@ class TestConfig(GlobalConfig):
 class ProdConfig(GlobalConfig):
     DB_URL: str = "sqlite://dev.db"
     DB_FORCE_ROLL_BACK: bool = False
+    AUTH0_DOMAIN_NAME: str = ""
+    AUTH0_ISSUER: str = ""
+    AUTH0_AUDIENCE: str = ""
+    AUTH0_ALGORITHMS: str = ""
+    CLIENT_ORIGIN_URL: str = ""    
 
     model_config = SettingsConfigDict(env_prefix="PROD_")
 

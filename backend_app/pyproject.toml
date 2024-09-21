@@ -8,9 +8,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.115.0"
-uvicorn = "^0.30.6"
+uvicorn = {extras = ["standard"], version = "^0.30.6"}
 pydantic-settings = "^2.5.2"
 python-dotenv = "^1.0.1"
+pyjwt = {extras = ["crypto"], version = "^2.9.0"}
+secure = "^0.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
