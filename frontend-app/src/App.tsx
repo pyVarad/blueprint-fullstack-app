@@ -1,34 +1,45 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import Layout from "./container/basic/layout";
-import './i18n/i18n';
+import { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import Cookies from "js-cookie";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from "./pages/home";
+import Users from "./pages/test";
+
 
 
 
 export default function App() {
-  const { t, i18n: { changeLanguage, language } } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === "en" ? "pt" : "en";
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  }
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [token, setToken] = useState("")
+  useEffect(() => {
+    const getUserMetadata = async () => {
+      const domain = import.meta.env.VITE_AUTH0_DOMAIN_NAME;
 
+      if (isAuthenticated) {
+        try {
+          const accessToken = await getAccessTokenSilently({
+            authorizationParams: {
+              audience: `https://${domain}/api/v2/`
+            },
+          });
+
+          setToken(accessToken);
+          Cookies.set('token', token, { expires: 1, secure: true });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+
+    getUserMetadata();
+  }, [getAccessTokenSilently, user?.sub]);
 
   return (
-    <Layout>
-      <h1>
-        Our Translated Header:
-        {t('headerTitle', { appName: "App for Translations" })}
-      </h1>
-      <h3>
-        Current Language: {currentLanguage}
-      </h3>     <button
-        type="button"
-        onClick={handleChangeLanguage}
-      >
-        Change Language
-      </button>
-    </Layout>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/users" element={<Users />} />
+      </Routes>
+    </BrowserRouter>
   )
 }

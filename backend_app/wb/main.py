@@ -1,17 +1,15 @@
 import logging
-import secure
 from contextlib import asynccontextmanager
 
-from fastapi.responses import JSONResponse
+import secure
 import uvicorn
 from configs.auth.dependencies import validate_token
-from configs.configurations import config
 from configs.logger import configure_logging
 from fastapi import Depends, FastAPI
+from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer
-from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
-
+from starlette.middleware.cors import CORSMiddleware
 
 logger = logging.getLogger(__name__)
 token_auth_scheme = HTTPBearer()
@@ -40,19 +38,22 @@ secure_headers = secure.Secure(
     xfo=x_frame_options,
 )
 
+
 @app.middleware("http")
 async def set_secure_headers(request, call_next):
     response = await call_next(request)
     secure_headers.framework.fastapi(response)
     return response
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[config.CLIENT_ORIGIN_URL],
-    allow_methods=["GET"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_origins=["http://localhost:5173", "http://0.0.0.0:8001"],
+    allow_methods=["*"],
+    allow_headers=["*"],
     max_age=86400,
 )
+
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request, exc):
@@ -72,11 +73,10 @@ def public():
     }
     return result
 
+
 @app.get("/api/private", dependencies=[Depends(validate_token)])
 def protected():
     return {"text": "This is a protected message."}
-
-
 
 
 if __name__ == "__main__":
