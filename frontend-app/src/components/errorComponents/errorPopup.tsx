@@ -1,17 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 
-export const ErrorPopUp: React.FC<{ title: string, message: string }> = ({ title, message }: { title: string, message: string }) => {
+interface ModalProps {
+    title: string;
+    message: string;
+}
+
+export const ErrorPopUp: React.FC<ModalProps> = ({ title, message }) => {
     const [showError, setShowError] = useState(true);
 
     const handleClose = () => {
-        setShowError(false); // Close the modal
+        setShowError(false);
     };
-    return (
-        <>
-            {showError && (<div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+
+    return <>
+        {showError && (ReactDOM.createPortal(
+            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
-                    <h2 className="text-2xl font-bold text-red-500 mb-4">{title}
-                    </h2>
+                    <h2 className="text-2xl font-bold text-red-500 mb-4">{title}</h2>
                     <p className="mb-6 text-gray-700">{message}</p>
                     <button
                         onClick={handleClose}
@@ -20,7 +26,8 @@ export const ErrorPopUp: React.FC<{ title: string, message: string }> = ({ title
                         Close
                     </button>
                 </div>
-            </div>)}
-        </>
-    )
-}
+            </div>,
+            document.getElementById('portal-root') as HTMLElement
+        ))}
+    </>
+};
